@@ -1,24 +1,45 @@
 package com.example.bookstoreappliaction.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.Date;
 
+@Entity(tableName = "books")
 public class Book {
+    @PrimaryKey(autoGenerate = true)
+    int id;
     String title;
     int quantity;
+    @ColumnInfo(name = "image_url")
     String imageUrl;
     float price;
-    Date dataPublication;
+    @ColumnInfo(name = "date_publication")
+    Date datePublication;
+    @ColumnInfo(name = "author_name")
     String authorName;
+
+    @ColumnInfo(name = "genre_id")
     int genreId;
 
-    public Book(String title, int quantity, String imageUrl, float price, Date dataPublication, String authorName, int genreId) {
+    public Book(int id, String title, int quantity, String imageUrl, float price, Date datePublication, String authorName, int genreId) {
+        this.id = id;
         this.title = title;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
         this.price = price;
-        this.dataPublication = dataPublication;
+        this.datePublication = datePublication;
         this.authorName = authorName;
         this.genreId = genreId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -53,12 +74,12 @@ public class Book {
         this.price = price;
     }
 
-    public Date getDataPublication() {
-        return dataPublication;
+    public Date getDatePublication() {
+        return datePublication;
     }
 
-    public void setDataPublication(Date dataPublication) {
-        this.dataPublication = dataPublication;
+    public void setDatePublication(Date datePublication) {
+        this.datePublication = datePublication;
     }
 
     public String getAuthorName() {

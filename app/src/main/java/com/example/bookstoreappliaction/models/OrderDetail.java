@@ -1,10 +1,19 @@
 package com.example.bookstoreappliaction.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "orderDetails")
 public class OrderDetail {
+    @PrimaryKey(autoGenerate = true)
     int id;
+    @ColumnInfo(name = "order_id")
     int orderId;
+    @ColumnInfo(name = "book_id")
     int bookId;
     int quantity;
+    @ColumnInfo(name = "unit_price")
     float unitPrice;
 
     public OrderDetail(int id, int orderId, int bookId, int quantity, float unitPrice) {

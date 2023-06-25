@@ -1,6 +1,11 @@
 package com.example.bookstoreappliaction.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "genre")
 public class Genre {
+    @PrimaryKey(autoGenerate = true)
     int id;
     String name;
 
