@@ -19,6 +19,9 @@ public interface UserDAO {
     @Query("SELECT * FROM users WHERE id IN (:userId) LIMIT 1")
     User getUserById(int userId);
 
+    @Query("SELECT * FROM users WHERE phone IN (:phone) LIMIT 1")
+    User getUserByPhone(String phone);
+
     @Query("SELECT * FROM users WHERE phone IN (:phone) AND password IN (:password) LIMIT 1")
     User getUserByPhoneAndPassword(String phone, String password);
 
