@@ -8,4 +8,5 @@ public class Constants {
     public static final String PHONE_REGISTER_ERROR = "This phone number is already registered";
     public static final String REQUIRE_MESSAGE = "The field cannot be empty";
     public static final String CONFIRM_PASSWORD_ERROR = "Two password are not the same";
+    public static final String LOGIN_FAILED_MESSAGE = "Incorrect phone number or password";
 }

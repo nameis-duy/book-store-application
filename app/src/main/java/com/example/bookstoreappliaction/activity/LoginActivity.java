@@ -3,11 +3,9 @@ package com.example.bookstoreappliaction.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,13 +14,9 @@ import android.widget.Toast;
 
 import com.example.bookstoreappliaction.R;
 import com.example.bookstoreappliaction.constants.Constants;
-import com.example.bookstoreappliaction.dao.UserDAO;
 import com.example.bookstoreappliaction.database.BookStoreDb;
 import com.example.bookstoreappliaction.executors.AppExecutors;
 import com.example.bookstoreappliaction.models.User;
-
-import java.io.File;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -74,6 +68,15 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    void Notify(String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     //Event Handler
     void buttonLogin_Click() {
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +90,14 @@ public class LoginActivity extends AppCompatActivity {
                         public void run() {
                             User user = db.userDAO().getUserByPhoneAndPassword(phone, password);
                             if (user != null) {
-                                Log.d("msg", "Succeed");
+                                if (user.getRole() == "US") {
+
+                                }
+                                else if (user.getRole() == "AD") {
+
+                                }
                             } else {
-                                Log.d("msg", "Failed");
+                                Notify(Constants.LOGIN_FAILED_MESSAGE);
                             }
                         }
                     });

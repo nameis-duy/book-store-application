@@ -116,14 +116,26 @@ public class CreateNewActivity extends AppCompatActivity {
                         public void run() {
                             User user = db.userDAO().getUserByPhone(phone);
                             if (user == null) {
-                                User createUser = new User(name, phone, password);
+                                User createUser = new User(name, phone, password, "US");
                                 db.userDAO().insert(createUser);
                                 intent = new Intent();
                                 finish();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(CreateNewActivity.this, "Register succeed.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        etPhone.setError(Constants.PHONE_REGISTER_ERROR);
+                                    }
+                                });
                             }
                         }
                     });
-                    Toast.makeText(CreateNewActivity.this, "Register succeed.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
