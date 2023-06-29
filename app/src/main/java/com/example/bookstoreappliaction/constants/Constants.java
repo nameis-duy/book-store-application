@@ -4,6 +4,8 @@ public class Constants {
     //APP CONSTANTS
     public static final String DB_NAME = "book-store-db";
     public static final String UPDATE_USER_ID = "update_user";
+    public static final String USER = "US";
+    public static final String ADMIN = "AD";
     //ERRORS MESSAGE
     public static final String PHONE_REGISTER_ERROR = "This phone number is already registered";
     public static final String REQUIRE_MESSAGE = "The field cannot be empty";

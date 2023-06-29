@@ -6,6 +6,7 @@ import androidx.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -90,10 +91,17 @@ public class LoginActivity extends AppCompatActivity {
                         public void run() {
                             User user = db.userDAO().getUserByPhoneAndPassword(phone, password);
                             if (user != null) {
-                                if (user.getRole() == "US") {
-
+                                if (user.getRole().equals(Constants.USER)) {
+                                    Log.d("msg", "Succeed");
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            intent = new Intent(LoginActivity.this, BookActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    });
                                 }
-                                else if (user.getRole() == "AD") {
+                                else if (user.getRole().equals(Constants.ADMIN)) {
 
                                 }
                             } else {
