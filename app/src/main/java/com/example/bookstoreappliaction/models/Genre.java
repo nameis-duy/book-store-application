@@ -1,6 +1,7 @@
 package com.example.bookstoreappliaction.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "genre")
@@ -9,6 +10,11 @@ public class Genre {
     int id;
     String name;
 
+    public Genre(String name) {
+        this.name = name;
+    }
+
+    @Ignore
     public Genre(int id, String name) {
         this.id = id;
         this.name = name;

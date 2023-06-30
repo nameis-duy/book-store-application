@@ -2,6 +2,7 @@ package com.example.bookstoreappliaction.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -23,6 +24,17 @@ public class Book {
     @ColumnInfo(name = "genre_id")
     int genreId;
 
+    public Book(String title, int quantity, String imageUrl, float price, Date datePublication, String authorName, int genreId) {
+        this.title = title;
+        this.quantity = quantity;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.datePublication = datePublication;
+        this.authorName = authorName;
+        this.genreId = genreId;
+    }
+
+    @Ignore
     public Book(int id, String title, int quantity, String imageUrl, float price, Date datePublication, String authorName, int genreId) {
         this.id = id;
         this.title = title;

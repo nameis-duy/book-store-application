@@ -1,6 +1,8 @@
 package com.example.bookstoreappliaction.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookstoreappliaction.R;
+import com.example.bookstoreappliaction.activity.book.BookDetailActivity;
+import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.models.Book;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
-
+    Context context;
     List<Book> books;
 
     public ProductAdapter(List<Book> books) {
@@ -27,7 +32,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         View view = layoutInflater.inflate(R.layout.product_items, parent, false);
@@ -43,7 +48,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         holder.tvName.setText(book.getTitle());
         holder.tvPrice.setText("$" + book.getPrice());
-        holder.imgProduct.setImageResource(R.drawable.ic_launcher_foreground);
+        Picasso.get()
+                .load(book.getImageUrl())
+                .into(holder.imgProduct);
+
+        holder.imgProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProductDetail(book);
+            }
+        });
+
+        holder.tvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProductDetail(book);
+            }
+        });
+    }
+
+    void ProductDetail(Book book) {
+        Intent intent = new Intent(context, BookDetailActivity.class);
+        intent.putExtra(Constants.BOOK_DETAIL_ID, book.getId());
+        context.startActivity(intent);
     }
 
     @Override
