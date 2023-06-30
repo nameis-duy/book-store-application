@@ -17,6 +17,7 @@ import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.database.BookStoreDb;
 import com.example.bookstoreappliaction.executors.AppExecutors;
 import com.example.bookstoreappliaction.models.Book;
+import com.example.bookstoreappliaction.models.Genre;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -65,6 +66,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 public void run() {
                     Book book = db.bookDAO().getBookById(bookId);
                     if (book != null) {
+                        Genre bookGenre = db.genreDAO().getGenreById(book.getGenreId());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -73,7 +75,7 @@ public class BookDetailActivity extends AppCompatActivity {
                                 tvPrice.setText("$" + book.getPrice());
                                 tvDateOfPublication.setText("Date publication: " + formatDate(book.getDatePublication()));
                                 tvAuthor.setText("Author: " + book.getAuthorName());
-                                tvGenre.setText("Genre: Super-hero");
+                                tvGenre.setText(bookGenre == null ? "Genre: Super-Hero" : "Genre: " + bookGenre.getName());
                             }
                         });
                     }

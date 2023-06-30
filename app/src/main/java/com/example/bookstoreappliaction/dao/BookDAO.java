@@ -19,6 +19,10 @@ public interface BookDAO {
     @Query("SELECT * FROM books WHERE id IN (:bookId) LIMIT 1")
     Book getBookById(int bookId);
 
+    @Query("SELECT * FROM books WHERE title LIKE (:search)")
+    List<Book> getAllByTitle(String search);
+
+
     @Insert
     void insert(Book book);
 

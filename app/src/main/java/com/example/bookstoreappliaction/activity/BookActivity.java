@@ -8,6 +8,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -77,7 +79,8 @@ public class BookActivity extends AppCompatActivity {
                 });
             }
         });
-        LoadList();
+        LoadList("");
+        searchBook();
     }
 
     void initView() {
@@ -90,23 +93,57 @@ public class BookActivity extends AppCompatActivity {
                 BookStoreDb.class, Constants.DB_NAME).build();
     }
 
-    void LoadList() {
+    void LoadList(String search) {
         AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
             @Override
             public void run() {
-                books = db.bookDAO().getAll();
-                if (books != null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter = new ProductAdapter(books);
-                            rvBooks.setAdapter(adapter);
-                            rvBooks.setLayoutManager(new LinearLayoutManager(BookActivity.this));
-                        }
-                    });
+                if (search.length() == 0) {
+                    books = db.bookDAO().getAll();
+                    if (books != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter = new ProductAdapter(books);
+                                rvBooks.setAdapter(adapter);
+                                rvBooks.setLayoutManager(new LinearLayoutManager(BookActivity.this));
+                            }
+                        });
+                    }
+                }
+                else {
+                    String searchPattern = "%" + search + "%";
+                    books = db.bookDAO().getAllByTitle(searchPattern);
+                    if (books != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter = new ProductAdapter(books);
+                                rvBooks.setAdapter(adapter);
+                                rvBooks.setLayoutManager(new LinearLayoutManager(BookActivity.this));
+                            }
+                        });
+                    }
                 }
             }
         });
     }
     //Event Handler
+    void searchBook() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchValue = etSearch.getText().toString();
+                LoadList(searchValue);
+            }
+        });
+    }
 }
