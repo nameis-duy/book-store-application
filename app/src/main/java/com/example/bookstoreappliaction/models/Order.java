@@ -2,7 +2,10 @@ package com.example.bookstoreappliaction.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.Date;
 
 @Entity(tableName = "orders")
 public class Order {
@@ -10,16 +13,31 @@ public class Order {
     int id;
     @ColumnInfo(name = "user_id")
     int userId;
-    @ColumnInfo(name = "order_detail_id")
-    int orderDetailId;
+    @ColumnInfo(name = "order_date")
+    Date orderDate;
     float total;
     @ColumnInfo(name = "is_paid")
     boolean isPaid;
 
-    public Order(int id, int userId, int orderDetailId, float total, boolean isPaid) {
+    @Ignore
+    public Order(int userId, float total, boolean isPaid) {
+        this.userId = userId;
+        this.total = total;
+        this.isPaid = isPaid;
+    }
+
+    public Order(int userId, Date orderDate, float total, boolean isPaid) {
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.total = total;
+        this.isPaid = isPaid;
+    }
+
+    @Ignore
+    public Order(int id, int userId, Date orderDate, float total, boolean isPaid) {
         this.id = id;
         this.userId = userId;
-        this.orderDetailId = orderDetailId;
+        this.orderDate = orderDate;
         this.total = total;
         this.isPaid = isPaid;
     }
@@ -40,12 +58,12 @@ public class Order {
         this.userId = userId;
     }
 
-    public int getOrderDetailId() {
-        return orderDetailId;
+    public Date getOrderDate() {
+        return orderDate;
     }
 
-    public void setOrderDetailId(int orderDetailId) {
-        this.orderDetailId = orderDetailId;
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 
     public float getTotal() {

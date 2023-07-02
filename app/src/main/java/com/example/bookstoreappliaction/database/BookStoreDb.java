@@ -8,7 +8,7 @@ import com.example.bookstoreappliaction.dao.*;
 import com.example.bookstoreappliaction.models.*;
 import com.example.bookstoreappliaction.utils.*;
 
-@Database(entities = {User.class, Book.class, Genre.class, Order.class, OrderDetail.class}, version = 2)
+@Database(entities = {User.class, Book.class, Genre.class, Order.class, OrderDetail.class}, version = 3)
 @TypeConverters({DateConverter.class})
 public abstract class BookStoreDb extends RoomDatabase {
     public abstract UserDAO userDAO();

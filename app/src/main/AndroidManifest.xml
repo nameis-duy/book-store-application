@@ -18,16 +18,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.cart.CartActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.book.BookDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.CreateNewActivity"
+            android:name=".activity.login.CreateNewActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.BookActivity"
+            android:name=".activity.book.BookActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

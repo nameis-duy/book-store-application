@@ -1,4 +1,4 @@
-package com.example.bookstoreappliaction.activity;
+package com.example.bookstoreappliaction.activity.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -17,8 +17,6 @@ import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.database.BookStoreDb;
 import com.example.bookstoreappliaction.executors.AppExecutors;
 import com.example.bookstoreappliaction.models.User;
-
-import java.util.List;
 
 public class CreateNewActivity extends AppCompatActivity {
 

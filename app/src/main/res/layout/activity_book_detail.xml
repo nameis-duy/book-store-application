@@ -101,10 +101,10 @@
             android:background="@color/blue"
             android:padding="10dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="30dp"/>
 
         <EditText
-            android:layout_width="75dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:id="@+id/etQuantity"
             android:text="1"
@@ -112,8 +112,8 @@
             android:textSize="20sp"
             android:textColor="@color/blue"
             android:textAlignment="center"
-            android:layout_toLeftOf="@id/btnAddToCart"
             android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/custom_layout_border"/>
 
     </RelativeLayout>

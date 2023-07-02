@@ -2,6 +2,7 @@ package com.example.bookstoreappliaction.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "orderDetails")
@@ -16,6 +17,14 @@ public class OrderDetail {
     @ColumnInfo(name = "unit_price")
     float unitPrice;
 
+    public OrderDetail(int orderId, int bookId, int quantity, float unitPrice) {
+        this.orderId = orderId;
+        this.bookId = bookId;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
+    @Ignore
     public OrderDetail(int id, int orderId, int bookId, int quantity, float unitPrice) {
         this.id = id;
         this.orderId = orderId;

@@ -16,8 +16,14 @@ public interface OrderDetailDAO {
     @Query("SELECT * FROM orderDetails")
     List<OrderDetail> getAll();
 
+    @Query("SELECT * FROM orderDetails WHERE order_id = (:orderId)")
+    List<OrderDetail> getDetailListByOrderId(int orderId);
+
     @Query("SELECT * FROM orderDetails WHERE id IN (:detailId) LIMIT 1")
     OrderDetail getById(int detailId);
+
+    @Query("SELECT * FROM orderDetails WHERE order_id = (:cartId) AND book_id = (:bookId) LIMIT 1")
+    OrderDetail getDetailByCartIdAndBookId(int cartId, int bookId);
 
     @Insert
     void insert(OrderDetail detail);

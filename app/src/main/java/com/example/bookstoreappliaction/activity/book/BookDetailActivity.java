@@ -2,14 +2,17 @@ package com.example.bookstoreappliaction.activity.book;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.bookstoreappliaction.R;
@@ -98,8 +101,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
         return formatDisplay.format(date);
     }
-    //
-
+    //Event Handler
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -107,5 +109,16 @@ public class BookDetailActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.cart_menu, menu);
+        MenuItem item = menu.findItem(R.id.badge);
+        MenuItemCompat.setActionView(item, R.layout.custom_cart);
+        RelativeLayout notiCount = (RelativeLayout) MenuItemCompat.getActionView(item);
+        TextView tvBadge = notiCount.findViewById(R.id.tvCartNotification);
+        tvBadge.setText("10");
+        return super.onCreateOptionsMenu(menu);
     }
 }

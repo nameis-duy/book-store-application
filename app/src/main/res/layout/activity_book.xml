@@ -3,33 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.BookActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activity.book.BookActivity">
 
     <EditText
+        android:id="@+id/etSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etSearch"
-        android:hint="Search books"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/custom_layout_border"
         android:drawableStart="@drawable/baseline_search_24"
         android:drawablePadding="10dp"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnCreateProduct"
-        android:text="Create"/>
+        android:hint="Search books" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvBookList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rvBookList"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>

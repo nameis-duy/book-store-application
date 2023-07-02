@@ -2,7 +2,6 @@ package com.example.bookstoreappliaction.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookstoreappliaction.R;
+import com.example.bookstoreappliaction.activity.book.BookActivity;
 import com.example.bookstoreappliaction.activity.book.BookDetailActivity;
 import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.models.Book;
@@ -51,18 +51,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         Picasso.get()
                 .load(book.getImageUrl())
                 .into(holder.imgProduct);
-
+        //
         holder.imgProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ProductDetail(book);
             }
         });
-
+        //
         holder.tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ProductDetail(book);
+            }
+        });
+        //
+        holder.btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((BookActivity) context).btnAddToCart_Click(book.getId());
             }
         });
     }

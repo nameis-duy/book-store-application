@@ -5,6 +5,7 @@ public class Constants {
     public static final String DB_NAME = "book-store-db";
     public static final String UPDATE_USER_ID = "update_user";
     public static final String BOOK_DETAIL_ID = "BookID";
+    public static final String USER_CART_ID = "CartID";
     //ROLE
     public static final String USER = "US";
     public static final String ADMIN = "AD";
