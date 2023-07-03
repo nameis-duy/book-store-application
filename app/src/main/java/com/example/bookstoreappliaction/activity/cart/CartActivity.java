@@ -95,9 +95,6 @@ public class CartActivity extends AppCompatActivity {
                     }
                 }
             });
-        } else  {
-            intent = new Intent();
-            finish();
         }
     }
 

@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Total: $99.00"
+        android:text="Total: $00.00"
         android:textColor="@color/blue"
         android:textSize="25sp" />
 
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:text="2 items"
+        android:text="0 item"
         android:textSize="18sp" />
 
     <Button

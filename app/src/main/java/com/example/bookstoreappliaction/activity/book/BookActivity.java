@@ -137,7 +137,6 @@ public class BookActivity extends AppCompatActivity {
         addCart();
         addCartDetail(bookId);
         initMenuViews();
-        Toast.makeText(this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
     }
 
     void addCart() {
@@ -158,16 +157,35 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Order cart = db.orderDAO().getCartByUserId(1);
+                Book book = db.bookDAO().getBookById(bookId);
                 if (cart != null) {
                     OrderDetail cartDetailTmp = db.orderDetailDAO().getDetailByCartIdAndBookId(cart.getId(), bookId);
                     if (cartDetailTmp == null) {
-                        Book book = db.bookDAO().getBookById(bookId);
                         OrderDetail cartDetail = new OrderDetail(cart.getId(), bookId, 1, book.getPrice());
                         db.orderDetailDAO().insert(cartDetail);
-                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BookActivity.this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else if (cartDetailTmp != null && cartDetailTmp.getQuantity() < book.getQuantity()){
                         int currentQuantity = cartDetailTmp.getQuantity();
                         cartDetailTmp.setQuantity(currentQuantity + 1);
                         db.orderDetailDAO().update(cartDetailTmp);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BookActivity.this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BookActivity.this, Constants.ADD_TO_CART_FAILED, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             }
@@ -207,7 +225,7 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(BookActivity.this, CartActivity.class);
-                intent.putExtra(Constants.USER_CART_ID, userCart.getId());
+                intent.putExtra(Constants.USER_CART_ID, userCart != null ? userCart.getId() : -1);
                 startActivity(intent);
             }
         });

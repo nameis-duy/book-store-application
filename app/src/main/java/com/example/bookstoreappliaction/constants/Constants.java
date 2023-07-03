@@ -17,4 +17,6 @@ public class Constants {
     public static final String REQUIRE_MESSAGE = "The field cannot be empty";
     public static final String CONFIRM_PASSWORD_ERROR = "Two password are not the same";
     public static final String LOGIN_FAILED_MESSAGE = "Incorrect phone number or password";
+    public static final String ADD_TO_CART_FAILED = "Product quantity is not enough";
+    public static final String ADD_TO_CART_QUANTITY_INVALID = "Quantity is invalid. (Quantity must be positive integer number)";
 }

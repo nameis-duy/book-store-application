@@ -8,7 +8,6 @@ import androidx.room.Room;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,7 @@ public class BookDetailActivity extends AppCompatActivity {
     ImageView imgBook, imgCart;
     TextView tvBookTitle, tvPrice, tvDateOfPublication, tvAuthor, tvGenre, tvBadge;
     EditText etQuantity;
-    Button btnAddToCart;
+    Button btnAddToCart, btnDecrease, btnIncrease;
     //
     BookStoreDb db;
     Order userCart;
@@ -56,6 +55,9 @@ public class BookDetailActivity extends AppCompatActivity {
         initDB();
         initView();
         //
+        btnAddToCart_OnClick();
+        btnIncrease_OnClick();
+        btnDecrease_OnClick();
     }
 
     void initView() {
@@ -70,6 +72,8 @@ public class BookDetailActivity extends AppCompatActivity {
         etQuantity = findViewById(R.id.etQuantity);
         //
         btnAddToCart = findViewById(R.id.btnAddToCart);
+        btnDecrease = findViewById(R.id.btnDecrement);
+        btnIncrease = findViewById(R.id.btnIncrement);
         //
         int bookId = getIntent().getIntExtra(Constants.BOOK_DETAIL_ID, -1);
         if (bookId != -1) {
@@ -93,8 +97,7 @@ public class BookDetailActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
-        else {
+        } else {
             intent = new Intent();
             finish();
         }
@@ -137,16 +140,31 @@ public class BookDetailActivity extends AppCompatActivity {
 
         return formatDisplay.format(date);
     }
+
+    boolean isValidQuantity(String quantityText) {
+        for (int i = 0; i < quantityText.length(); i++) {
+            if (!Character.isDigit(quantityText.charAt(i))) {
+                return false;
+            }
+        }
+        int quantity = Integer.parseInt(quantityText);
+        return quantity > 0;
+    }
+
     //Event Handler
     void btnAddToCart_OnClick() {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
-            int bookId = getIntent().getIntExtra(Constants.BOOK_DETAIL_ID, -1);
             @Override
             public void onClick(View v) {
-                addCart();
-                addCartDetail(bookId);
-                initMenuViews();
-                Toast.makeText(BookDetailActivity.this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
+                if (isValidQuantity(etQuantity.getText().toString())) {
+                    int bookId = getIntent().getIntExtra(Constants.BOOK_DETAIL_ID, -1);
+                    addCart();
+                    addCartDetail(bookId);
+                    initMenuViews();
+                }
+                else {
+                    Toast.makeText(BookDetailActivity.this, Constants.ADD_TO_CART_QUANTITY_INVALID, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -170,18 +188,59 @@ public class BookDetailActivity extends AppCompatActivity {
             public void run() {
                 Order cart = db.orderDAO().getCartByUserId(1);
                 int quantity = Integer.parseInt(etQuantity.getText().toString());
+                Book book = db.bookDAO().getBookById(bookId);
                 if (cart != null) {
                     OrderDetail cartDetailTmp = db.orderDetailDAO().getDetailByCartIdAndBookId(cart.getId(), bookId);
-                    if (cartDetailTmp == null) {
-                        Book book = db.bookDAO().getBookById(bookId);
+                    if (cartDetailTmp == null && quantity <= book.getQuantity()) {
                         OrderDetail cartDetail = new OrderDetail(cart.getId(), bookId, quantity, book.getPrice());
                         db.orderDetailDAO().insert(cartDetail);
-                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BookDetailActivity.this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else if (cartDetailTmp != null && quantity + cartDetailTmp.getQuantity() <= book.getQuantity()) {
                         int currentQuantity = cartDetailTmp.getQuantity();
-                        cartDetailTmp.setQuantity(currentQuantity + 1);
+                        cartDetailTmp.setQuantity(currentQuantity + quantity);
                         db.orderDetailDAO().update(cartDetailTmp);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BookDetailActivity.this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BookDetailActivity.this, Constants.ADD_TO_CART_FAILED, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
+            }
+        });
+    }
+
+    void btnDecrease_OnClick() {
+        btnDecrease.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onClick(View v) {
+                int currentQuantity = Integer.parseInt(etQuantity.getText().toString());
+                etQuantity.setText(String.format("%d", currentQuantity - 1));
+            }
+        });
+    }
+
+    void btnIncrease_OnClick() {
+        btnIncrease.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onClick(View v) {
+                int currentQuantity = Integer.parseInt(etQuantity.getText().toString());
+                etQuantity.setText(String.format("%d", currentQuantity + 1));
             }
         });
     }
@@ -209,10 +268,16 @@ public class BookDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(BookDetailActivity.this, CartActivity.class);
-                intent.putExtra(Constants.USER_CART_ID, userCart.getId());
+                intent.putExtra(Constants.USER_CART_ID, userCart != null ? userCart.getId() : -1);
                 startActivity(intent);
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initMenuViews();
     }
 }
