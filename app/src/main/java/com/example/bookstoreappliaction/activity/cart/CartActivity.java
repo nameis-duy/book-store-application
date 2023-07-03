@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.bookstoreappliaction.R;
+import com.example.bookstoreappliaction.activity.book.BookActivity;
 import com.example.bookstoreappliaction.adapter.CartAdapter;
 import com.example.bookstoreappliaction.adapter.ProductAdapter;
 import com.example.bookstoreappliaction.constants.Constants;
@@ -73,7 +75,7 @@ public class CartActivity extends AppCompatActivity {
                 BookStoreDb.class, Constants.DB_NAME).build();
     }
 
-    void LoadList() {
+    public void LoadList() {
         int cartId = getIntent().getIntExtra(Constants.USER_CART_ID, -1);
         if (cartId != -1) {
             AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
@@ -110,6 +112,8 @@ public class CartActivity extends AppCompatActivity {
     public BookStoreDb getDB() {
         return db;
     }
+
+    public TextView getTvTotal() { return tvTotal; }
     //Event Handler
 
     @Override

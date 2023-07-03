@@ -38,6 +38,8 @@ public class BookActivity extends AppCompatActivity {
 
     RecyclerView rvBooks;
     EditText etSearch;
+    TextView tvBadge;
+    ImageView imgCart;
     //
     List<Book> books;
     Order userCart;
@@ -68,6 +70,24 @@ public class BookActivity extends AppCompatActivity {
                 BookStoreDb.class, Constants.DB_NAME).build();
     }
 
+    public void initMenuViews() {
+        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void run() {
+                userCart = db.orderDAO().getCartByUserId(1);
+                List<OrderDetail> cartDetails = db.orderDetailDAO().getDetailListByOrderId(userCart.getId());
+                int cartItemCount = cartDetails != null ? cartDetails.size() : 0;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvBadge.setText(String.format("%d", cartItemCount));
+                    }
+                });
+            }
+        });
+    }
+
     void LoadList(String search) {
         AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
             @Override
@@ -84,8 +104,7 @@ public class BookActivity extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                else {
+                } else {
                     String searchPattern = "%" + search + "%";
                     books = db.bookDAO().getAllByTitle(searchPattern);
                     if (books != null) {
@@ -102,10 +121,12 @@ public class BookActivity extends AppCompatActivity {
             }
         });
     }
+
     //Event Handler
     public void btnAddToCart_Click(int bookId) {
         addCart();
         addCartDetail(bookId);
+        initMenuViews();
     }
 
     void addCart() {
@@ -170,32 +191,23 @@ public class BookActivity extends AppCompatActivity {
         MenuItemCompat.setActionView(item, R.layout.custom_cart);
         //
         RelativeLayout layout = (RelativeLayout) MenuItemCompat.getActionView(item);
-        TextView tvBadge = layout.findViewById(R.id.tvCartNotification);
-        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void run() {
-                userCart = db.orderDAO().getCartByUserId(1);
-                List<OrderDetail> cartDetails = db.orderDetailDAO().getDetailListByOrderId(userCart.getId());
-                int cartItemCount = cartDetails != null ? cartDetails.size() : 0;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvBadge.setText(String.format("%d", cartItemCount));
-                    }
-                });
-            }
-        });
-
-        ImageView imgCart = layout.findViewById(R.id.imgCart);
+        tvBadge = layout.findViewById(R.id.tvCartNotification);
+        imgCart = layout.findViewById(R.id.imgCart);
+        initMenuViews();
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 intent = new Intent(BookActivity.this, CartActivity.class);
-                 intent.putExtra(Constants.USER_CART_ID, userCart.getId());
+                intent = new Intent(BookActivity.this, CartActivity.class);
+                intent.putExtra(Constants.USER_CART_ID, userCart.getId());
                 startActivity(intent);
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initMenuViews();
     }
 }
