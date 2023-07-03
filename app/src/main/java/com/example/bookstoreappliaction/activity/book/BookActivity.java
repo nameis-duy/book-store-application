@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bookstoreappliaction.R;
 import com.example.bookstoreappliaction.activity.cart.CartActivity;
@@ -76,14 +77,23 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void run() {
                 userCart = db.orderDAO().getCartByUserId(1);
-                List<OrderDetail> cartDetails = db.orderDetailDAO().getDetailListByOrderId(userCart.getId());
-                int cartItemCount = cartDetails != null ? cartDetails.size() : 0;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvBadge.setText(String.format("%d", cartItemCount));
-                    }
-                });
+                if (userCart != null) {
+                    List<OrderDetail> cartDetails = db.orderDetailDAO().getDetailListByOrderId(userCart.getId());
+                    int cartItemCount = cartDetails != null ? cartDetails.size() : 0;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvBadge.setText(String.format("%d", cartItemCount));
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvBadge.setText(String.format("%d", 0));
+                        }
+                    });
+                }
             }
         });
     }
@@ -127,6 +137,7 @@ public class BookActivity extends AppCompatActivity {
         addCart();
         addCartDetail(bookId);
         initMenuViews();
+        Toast.makeText(this, Constants.ADD_TO_CART_SUCCEED, Toast.LENGTH_SHORT).show();
     }
 
     void addCart() {
@@ -137,7 +148,6 @@ public class BookActivity extends AppCompatActivity {
                 if (cartTmp == null) {
                     Order cart = new Order(1, 0, false);
                     db.orderDAO().insert(cart);
-                    Log.d("msg", "Add Succeed");
                 }
             }
         });
@@ -154,7 +164,6 @@ public class BookActivity extends AppCompatActivity {
                         Book book = db.bookDAO().getBookById(bookId);
                         OrderDetail cartDetail = new OrderDetail(cart.getId(), bookId, 1, book.getPrice());
                         db.orderDetailDAO().insert(cartDetail);
-                        Log.d("msg", "Create Cart Detail Succeed");
                     } else {
                         int currentQuantity = cartDetailTmp.getQuantity();
                         cartDetailTmp.setQuantity(currentQuantity + 1);

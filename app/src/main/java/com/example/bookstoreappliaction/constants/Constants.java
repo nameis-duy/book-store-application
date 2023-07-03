@@ -9,6 +9,9 @@ public class Constants {
     //ROLE
     public static final String USER = "US";
     public static final String ADMIN = "AD";
+    //SUCCEED MESSAGE
+    public static final String ADD_TO_CART_SUCCEED = "Add succeed";
+
     //ERRORS MESSAGE
     public static final String PHONE_REGISTER_ERROR = "This phone number is already registered";
     public static final String REQUIRE_MESSAGE = "The field cannot be empty";
