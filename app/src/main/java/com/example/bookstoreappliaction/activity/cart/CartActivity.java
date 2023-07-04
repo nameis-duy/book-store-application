@@ -1,6 +1,7 @@
 package com.example.bookstoreappliaction.activity.cart;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.bookstoreappliaction.R;
 import com.example.bookstoreappliaction.activity.book.BookActivity;
+import com.example.bookstoreappliaction.activity.payment.PaymentActivity;
 import com.example.bookstoreappliaction.adapter.CartAdapter;
 import com.example.bookstoreappliaction.adapter.ProductAdapter;
 import com.example.bookstoreappliaction.constants.Constants;
@@ -30,6 +32,8 @@ import com.example.bookstoreappliaction.models.Book;
 import com.example.bookstoreappliaction.models.Order;
 import com.example.bookstoreappliaction.models.OrderDetail;
 import com.example.bookstoreappliaction.notification_config.NotificationConfig;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import java.util.Date;
 import java.util.List;
@@ -139,7 +143,9 @@ public class CartActivity extends AppCompatActivity {
         return db;
     }
 
-    public TextView getTvTotal() { return tvTotal; }
+    public TextView getTvTotal() {
+        return tvTotal;
+    }
 
     //Event Handler
     void btnCheckout_OnClick() {
@@ -152,24 +158,16 @@ public class CartActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Order cart = db.orderDAO().getCartById(cartId);
+                            //check if cart is null
                             if (cart != null) {
-                                cart.setPaid(true);
-                                cart.setOrderDate(new Date());
                                 List<OrderDetail> carts = db.orderDetailDAO().getDetailListByOrderId(cartId);
-                                updateBookQuantity(carts);
                                 float total = GenerateTotal(carts);
-                                cart.setTotal(total);
-                                db.orderDAO().update(cart);
                                 runOnUiThread(new Runnable() {
-                                    @SuppressLint("DefaultLocale")
                                     @Override
                                     public void run() {
-                                        sendNotification(Constants.APP_NAME,
-                                                String.format(Constants.NOTIFICATION_AFTER_CHECKOUT_SUCCEED, carts.size()),
-                                                cart.getUserId());
-                                        intent = new Intent();
-                                        Toast.makeText(CartActivity.this, Constants.CHECKOUT_SUCCEED, Toast.LENGTH_SHORT).show();
-                                        finish();
+                                        intent = new Intent(CartActivity.this, PaymentActivity.class);
+                                        intent.putExtra(Constants.ORDER_TOTAL, total);
+                                        startActivityForResult(intent, 99);
                                     }
                                 });
                             }
@@ -180,6 +178,53 @@ public class CartActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    void finishCheckout() {
+        int cartId = getIntent().getIntExtra(Constants.USER_CART_ID, -1);
+        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Order cart = db.orderDAO().getCartById(cartId);
+                //check if cart is null
+                if (cart != null) {
+                    List<OrderDetail> carts = db.orderDetailDAO().getDetailListByOrderId(cartId);
+                    float total = GenerateTotal(carts);
+                    //update book quantity if payment succeed
+                    updateBookQuantity(carts);
+                    //update cart if payment succeed
+                    cart.setPaid(true);
+                    cart.setOrderDate(new Date());
+                    cart.setTotal(total);
+                    db.orderDAO().update(cart);
+                    runOnUiThread(new Runnable() {
+                        @SuppressLint("DefaultLocale")
+                        @Override
+                        public void run() {
+                            //notify if payment succeed
+                            sendNotification(Constants.APP_NAME,
+                                    String.format(Constants.NOTIFICATION_AFTER_CHECKOUT_SUCCEED, carts.size()),
+                                    cart.getUserId());
+                            intent = new Intent();
+                            Toast.makeText(CartActivity.this, Constants.CHECKOUT_SUCCEED, Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 99 && data != null) {
+            if (data.getStringExtra(Constants.PAYMENT_MESSAGE).equals(Constants.PAYMENT_SUCCEED)) {
+                finishCheckout();
+            } else {
+                Toast.makeText(CartActivity.this, Constants.CHECKOUT_ERROR, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
