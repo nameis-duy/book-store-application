@@ -3,7 +3,11 @@ package com.example.bookstoreappliaction.activity.login;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,7 +22,12 @@ import com.example.bookstoreappliaction.activity.book.BookActivity;
 import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.database.BookStoreDb;
 import com.example.bookstoreappliaction.executors.AppExecutors;
+import com.example.bookstoreappliaction.models.Order;
+import com.example.bookstoreappliaction.models.OrderDetail;
 import com.example.bookstoreappliaction.models.User;
+import com.example.bookstoreappliaction.notification_config.NotificationConfig;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -79,6 +88,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    void sendNotification(String title, String message, int userId) {
+        NotificationManager manager = NotificationConfig.getNotificationManger(this);
+        Notification.Builder builder = NotificationConfig.getBuilder(this, title, message);
+        Notification notification = builder.build();
+        if (manager != null) {
+            manager.notify(userId, notification);
+        }
+    }
+
     //Event Handler
     void buttonLogin_Click() {
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -88,15 +106,28 @@ public class LoginActivity extends AppCompatActivity {
                     String phone = etPhone.getText().toString();
                     String password = etPassword.getText().toString();
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                        @SuppressLint("DefaultLocale")
                         @Override
                         public void run() {
                             User user = db.userDAO().getUserByPhoneAndPassword(phone, password);
                             if (user != null) {
                                 if (user.getRole().equals(Constants.USER)) {
-                                    Log.d("msg", "Succeed");
+                                    //Notify user if cart is not empty
+                                    Order cart = db.orderDAO().getCartByUserId(user.getId());
+                                    if (cart != null) {
+                                        List<OrderDetail> details = db.orderDetailDAO().getDetailListByOrderId(cart.getId());
+                                        if (details != null && details.size() > 0) {
+                                            sendNotification(Constants.APP_NAME, String.format(Constants.NOTIFICATION_AFTER_LOGIN, details.size()), user.getId());
+                                        }
+                                    }
+                                    //Redirect to Book Activity
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            SharedPreferences shared = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = shared.edit();
+                                            editor.putInt(Constants.USER_ID, user.getId());
+                                            editor.apply();
                                             intent = new Intent(LoginActivity.this, BookActivity.class);
                                             startActivity(intent);
                                         }

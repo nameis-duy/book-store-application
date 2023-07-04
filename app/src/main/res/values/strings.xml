@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Manga Store</string>
+    <string name="title_profile">Your Profile</string>
+    <string name="title_map">Our Location</string>
+    <string name="title_orders">Your orders</string>
+    <string name="title_home">Home</string>
 </resources>

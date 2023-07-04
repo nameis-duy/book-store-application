@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +19,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +29,10 @@ import android.widget.Toast;
 
 import com.example.bookstoreappliaction.R;
 import com.example.bookstoreappliaction.activity.cart.CartActivity;
+import com.example.bookstoreappliaction.activity.login.LoginActivity;
+import com.example.bookstoreappliaction.activity.map.MapActivity;
+import com.example.bookstoreappliaction.activity.orders.OrdersActivity;
+import com.example.bookstoreappliaction.activity.users.UserProfile;
 import com.example.bookstoreappliaction.adapter.ProductAdapter;
 import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.database.BookStoreDb;
@@ -31,8 +40,9 @@ import com.example.bookstoreappliaction.executors.AppExecutors;
 import com.example.bookstoreappliaction.models.Book;
 import com.example.bookstoreappliaction.models.Order;
 import com.example.bookstoreappliaction.models.OrderDetail;
+import com.example.bookstoreappliaction.models.User;
+import com.example.bookstoreappliaction.notification_config.NotificationConfig;
 
-import java.util.Date;
 import java.util.List;
 
 public class BookActivity extends AppCompatActivity {
@@ -41,9 +51,11 @@ public class BookActivity extends AppCompatActivity {
     EditText etSearch;
     TextView tvBadge;
     ImageView imgCart;
+    ImageButton btnHome, btnProfile, btnLocation, btnOrders;
     //
     List<Book> books;
     Order userCart;
+    User loginUser;
     //
     BookStoreDb db;
     ProductAdapter adapter;
@@ -54,16 +66,52 @@ public class BookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
         //
-        initView();
         initDatabase();
+        initUser();
+        initView();
         //
         LoadList("");
         searchBook();
+        btnProfile_OnClick();
+        btnLocation_OnClick();
+        btnOrders_OnClick();
+    }
+
+    void initUser() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
+        int userId = sharedPreferences.getInt(Constants.USER_ID, -1);
+        if (userId == -1) {
+            intent = new Intent(BookActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    loginUser = db.userDAO().getUserById(userId);
+                    if (loginUser == null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                intent = new Intent(BookActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
     void initView() {
         rvBooks = findViewById(R.id.rvBookList);
         etSearch = findViewById(R.id.etSearch);
+        //
+        btnHome = findViewById(R.id.btnHome);
+        btnProfile = findViewById(R.id.btnProfile);
+        btnLocation = findViewById(R.id.btnLocation);
+        btnOrders = findViewById(R.id.btnOrders);
     }
 
     void initDatabase() {
@@ -76,7 +124,7 @@ public class BookActivity extends AppCompatActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                userCart = db.orderDAO().getCartByUserId(1);
+                userCart = db.orderDAO().getCartByUserId(loginUser.getId());
                 if (userCart != null) {
                     List<OrderDetail> cartDetails = db.orderDetailDAO().getDetailListByOrderId(userCart.getId());
                     int cartItemCount = cartDetails != null ? cartDetails.size() : 0;
@@ -133,6 +181,37 @@ public class BookActivity extends AppCompatActivity {
     }
 
     //Event Handler
+    void btnProfile_OnClick() {
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(BookActivity.this, UserProfile.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    void btnLocation_OnClick() {
+        btnLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(BookActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    void btnOrders_OnClick() {
+        btnOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(BookActivity.this, OrdersActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
     public void btnAddToCart_Click(int bookId) {
         addCart();
         addCartDetail(bookId);
@@ -143,9 +222,9 @@ public class BookActivity extends AppCompatActivity {
         AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Order cartTmp = db.orderDAO().getCartByUserId(1);
+                Order cartTmp = db.orderDAO().getCartByUserId(loginUser.getId());
                 if (cartTmp == null) {
-                    Order cart = new Order(1, 0, false);
+                    Order cart = new Order(loginUser.getId(), 0, false);
                     db.orderDAO().insert(cart);
                 }
             }
@@ -156,7 +235,7 @@ public class BookActivity extends AppCompatActivity {
         AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Order cart = db.orderDAO().getCartByUserId(1);
+                Order cart = db.orderDAO().getCartByUserId(loginUser.getId());
                 Book book = db.bookDAO().getBookById(bookId);
                 if (cart != null) {
                     OrderDetail cartDetailTmp = db.orderDetailDAO().getDetailByCartIdAndBookId(cart.getId(), bookId);

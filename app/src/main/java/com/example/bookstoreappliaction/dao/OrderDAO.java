@@ -15,8 +15,14 @@ public interface OrderDAO {
     @Query("SELECT * FROM orders")
     List<Order> getAll();
 
+    @Query("SELECT * FROM orders WHERE user_id IN (:userId) AND is_paid = 1")
+    List<Order> getOrdersByUserId(int userId);
+
     @Query("SELECT * FROM orders WHERE id IN (:orderId) LIMIT 1")
     Order getById(int orderId);
+
+    @Query("SELECT * FROM orders WHERE id IN (:orderId) AND is_paid = 0 LIMIT 1")
+    Order getCartById(int orderId);
 
     @Query("SELECT * FROM orders WHERE is_paid = 0 AND user_id = (:userId)")
     List<Order> getCartListByUserId(int userId);

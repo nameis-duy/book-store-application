@@ -7,13 +7,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bookstoreappliaction.R;
 import com.example.bookstoreappliaction.activity.book.BookActivity;
@@ -25,7 +29,9 @@ import com.example.bookstoreappliaction.executors.AppExecutors;
 import com.example.bookstoreappliaction.models.Book;
 import com.example.bookstoreappliaction.models.Order;
 import com.example.bookstoreappliaction.models.OrderDetail;
+import com.example.bookstoreappliaction.notification_config.NotificationConfig;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,6 +58,7 @@ public class CartActivity extends AppCompatActivity {
         //
         LoadList();
         //
+        btnCheckout_OnClick();
     }
 
     void initViews() {
@@ -106,12 +113,74 @@ public class CartActivity extends AppCompatActivity {
         return total;
     }
 
+    void updateBookQuantity(List<OrderDetail> details) {
+        for (OrderDetail detail : details) {
+            AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Book book = db.bookDAO().getBookById(detail.getBookId());
+                    book.setQuantity(book.getQuantity() - detail.getQuantity());
+                    db.bookDAO().update(book);
+                }
+            });
+        }
+    }
+
+    void sendNotification(String title, String message, int userId) {
+        NotificationManager manager = NotificationConfig.getNotificationManger(this);
+        Notification.Builder builder = NotificationConfig.getBuilder(this, title, message);
+        Notification notification = builder.build();
+        if (manager != null) {
+            manager.notify(userId, notification);
+        }
+    }
+
     public BookStoreDb getDB() {
         return db;
     }
 
     public TextView getTvTotal() { return tvTotal; }
+
     //Event Handler
+    void btnCheckout_OnClick() {
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int cartId = getIntent().getIntExtra(Constants.USER_CART_ID, -1);
+                if (cartId != -1) {
+                    AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Order cart = db.orderDAO().getCartById(cartId);
+                            if (cart != null) {
+                                cart.setPaid(true);
+                                cart.setOrderDate(new Date());
+                                List<OrderDetail> carts = db.orderDetailDAO().getDetailListByOrderId(cartId);
+                                updateBookQuantity(carts);
+                                float total = GenerateTotal(carts);
+                                cart.setTotal(total);
+                                db.orderDAO().update(cart);
+                                runOnUiThread(new Runnable() {
+                                    @SuppressLint("DefaultLocale")
+                                    @Override
+                                    public void run() {
+                                        sendNotification(Constants.APP_NAME,
+                                                String.format(Constants.NOTIFICATION_AFTER_CHECKOUT_SUCCEED, carts.size()),
+                                                cart.getUserId());
+                                        intent = new Intent();
+                                        Toast.makeText(CartActivity.this, Constants.CHECKOUT_SUCCEED, Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(CartActivity.this, Constants.CHECKOUT_ERROR, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

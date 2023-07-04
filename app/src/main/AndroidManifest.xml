@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,19 +21,31 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.orders.OrderDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.orders.OrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.users.UserProfile"
+            android:exported="false" />
+        <activity
+            android:name=".activity.map.MapActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.cart.CartActivity"
             android:exported="false" />
         <activity
             android:name=".activity.book.BookDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.login.LoginActivity"
+            android:name=".activity.book.BookActivity"
             android:exported="false" />
         <activity
             android:name=".activity.login.CreateNewActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.book.BookActivity"
+            android:name=".activity.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
