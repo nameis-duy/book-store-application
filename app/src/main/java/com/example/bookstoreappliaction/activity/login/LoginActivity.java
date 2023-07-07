@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bookstoreappliaction.R;
+import com.example.bookstoreappliaction.activity.admin.AdminDashboardActivity;
 import com.example.bookstoreappliaction.activity.book.BookActivity;
 import com.example.bookstoreappliaction.constants.Constants;
 import com.example.bookstoreappliaction.database.BookStoreDb;
@@ -134,7 +134,13 @@ public class LoginActivity extends AppCompatActivity {
                                     });
                                 }
                                 else if (user.getRole().equals(Constants.ADMIN)) {
-
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    });
                                 }
                             } else {
                                 Notify(Constants.LOGIN_FAILED_MESSAGE);
