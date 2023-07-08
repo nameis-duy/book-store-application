@@ -21,6 +21,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.admin.AdminBookListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.admin.AdminUserListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.admin.AdminDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.payment.PaymentActivity"
             android:exported="false" />
         <activity
@@ -46,6 +55,9 @@
             android:exported="false" />
         <activity
             android:name=".activity.login.CreateNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.admin.CreateProductActivity"
             android:exported="false" />
         <activity
             android:name=".activity.login.LoginActivity"

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TableRow>
+        <TextView
+            android:id="@+id/row_adminuserlist_tv_userId"
+            android:text="1"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/row_adminuserlist_tv_userName"
+            android:text="Bach"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/row_adminuserlist_tv_userPhone"
+            android:text="0903765432"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/row_adminuserlist_tv_userPassword"
+            android:text="asfjsafasag"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/row_adminuserlist_tv_userRole"
+            android:text="Admin"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/black" />
+    </TableRow>
+
+</TableLayout>

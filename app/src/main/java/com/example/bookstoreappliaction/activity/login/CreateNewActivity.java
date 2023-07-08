@@ -114,7 +114,7 @@ public class CreateNewActivity extends AppCompatActivity {
                         public void run() {
                             User user = db.userDAO().getUserByPhone(phone);
                             if (user == null) {
-                                User createUser = new User(name, phone, password, "US");
+                                User createUser = new User(name, phone, password, Constants.ADMIN);
                                 db.userDAO().insert(createUser);
                                 intent = new Intent();
                                 finish();

@@ -1,6 +1,5 @@
 package com.example.bookstoreappliaction.activity.book;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,18 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -41,7 +36,6 @@ import com.example.bookstoreappliaction.models.Book;
 import com.example.bookstoreappliaction.models.Order;
 import com.example.bookstoreappliaction.models.OrderDetail;
 import com.example.bookstoreappliaction.models.User;
-import com.example.bookstoreappliaction.notification_config.NotificationConfig;
 
 import java.util.List;
 
