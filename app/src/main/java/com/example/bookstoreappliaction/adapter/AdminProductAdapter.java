@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapter.ViewHolder> {
     private List<Book> bookList;
-    Context context;
+    private Context context;
 
     public AdminProductAdapter(List<Book> bookList) { this.bookList = bookList; }
 
@@ -28,25 +29,14 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
 
         TextView tvName, tvPrice;
         ImageView imgProduct;
+        Button btnUpdate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvName = itemView.findViewById(R.id.tvNames);
             tvPrice = itemView.findViewById(R.id.tvPrices);
             imgProduct = itemView.findViewById(R.id.imgBooks);
-
-            imgProduct.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int elementId = bookList.get(getAdapterPosition()).getId();
-                    int gId = bookList.get(getAdapterPosition()).getGenreId();
-                    Intent i = new Intent(context, CreateProductActivity.class);
-                    i.putExtra("ProductId", elementId);
-                    i.putExtra("genreId", gId);
-                    context.startActivity(i);
-                }
-            });
+            btnUpdate = itemView.findViewById(R.id.btnUpdate);
         }
 
     }
@@ -56,9 +46,17 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.admin_book_items, parent, false);
-        return new ViewHolder(itemView);
+        View view = layoutInflater.inflate(R.layout.admin_book_items, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.btnUpdate.setOnClickListener(v -> {
+            int position = viewHolder.getAdapterPosition();
+            int bookId =(int) bookList.get(position).getId();
+            Intent intent = new Intent(context, CreateProductActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("UpdateId", bookId);
+            context.startActivity(intent);
+        });
+        return viewHolder;
     }
 
     @Override
@@ -70,35 +68,12 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
         Picasso.get()
                 .load(book.getImageUrl())
                 .into(holder.imgProduct);
-
-//        holder.imgProduct.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ProductDetail(book);
-//            }
-//        });
-//
-//        holder.tvName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ProductDetail(book);
-//            }
-//        });
     }
 
     @Override
     public int getItemCount() {
         if (bookList == null) return 0;
         return bookList.size();
-    }
-
-    public void setTasks(List<Book> mbookList) {
-        bookList = mbookList;
-        notifyDataSetChanged();
-    }
-
-    public List<Book> getTasks() {
-        return bookList;
     }
 
 }

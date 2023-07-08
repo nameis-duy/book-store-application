@@ -79,7 +79,7 @@
             android:textSize="35sp" />
 
         <EditText
-            android:id="@+id/etProductTitle"
+            android:id="@+id/etCreateTitle"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginLeft="30dp"
@@ -89,7 +89,8 @@
             android:drawablePadding="10dp" android:textColorHint="#7A0C0C0C" />
 
         <EditText
-            android:id="@+id/etProductQuantity"
+            android:id="@+id/etCreateQuantity"
+            android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -111,7 +112,8 @@
             android:textColorHint="#6A000000" />
 
         <EditText
-            android:id="@+id/etProductPrice"
+            android:id="@+id/etCreatePrice"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -124,7 +126,7 @@
 
 
         <EditText
-            android:id="@+id/etProductAuthor"
+            android:id="@+id/etCreateAuthor"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -135,7 +137,7 @@
             android:drawablePadding="10dp"
             android:textColorHint="#6A000000" />
         <Spinner
-            android:id="@+id/etProductGenre"
+            android:id="@+id/sCreateGenre"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"

@@ -57,6 +57,9 @@
             android:name=".activity.login.CreateNewActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.admin.CreateProductActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.login.LoginActivity"
             android:exported="true">
             <intent-filter>

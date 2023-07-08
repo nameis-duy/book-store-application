@@ -23,7 +23,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnCreateProduct11"
+        android:id="@+id/btnCreate"
         android:text="Create"/>
 
     <androidx.recyclerview.widget.RecyclerView
