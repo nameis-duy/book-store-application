@@ -17,6 +17,7 @@ import com.example.bookstoreappliaction.activity.login.LoginActivity;
 public class AdminDashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton btnProducts, btnUsers, btnLogOut;
+
     Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
         btnProducts.setOnClickListener(this);
         btnUsers.setOnClickListener(this);
         btnLogOut.setOnClickListener(this);
+
     }
 
     @Override
