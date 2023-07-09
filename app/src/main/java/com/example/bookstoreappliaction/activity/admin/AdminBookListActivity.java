@@ -1,6 +1,7 @@
 package com.example.bookstoreappliaction.activity.admin;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,9 +15,11 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.bookstoreappliaction.R;
 import com.example.bookstoreappliaction.activity.book.BookActivity;
+import com.example.bookstoreappliaction.activity.login.LoginActivity;
 import com.example.bookstoreappliaction.activity.map.MapActivity;
 import com.example.bookstoreappliaction.adapter.AdminProductAdapter;
 import com.example.bookstoreappliaction.constants.Constants;
@@ -27,10 +30,11 @@ import com.example.bookstoreappliaction.models.Genre;
 
 import java.util.List;
 
-public class AdminBookListActivity extends AppCompatActivity {
+public class AdminBookListActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView rvBooks;
     EditText etSearch;
     Button btnCreate;
+    ImageButton btnDashboard, btnUsers, btnLogOut;
     //
     List<Book> books;
     BookStoreDb db;
@@ -64,6 +68,14 @@ public class AdminBookListActivity extends AppCompatActivity {
         rvBooks = findViewById(R.id.activity_adminbooklist_rv_bookList);
         etSearch = findViewById(R.id.activity_adminbooklist_et_search);
         btnCreate = findViewById(R.id.btnCreate);
+
+        btnDashboard = findViewById(R.id.btnDashboard);
+        btnUsers = findViewById(R.id.btnUsers);
+        btnLogOut = findViewById(R.id.btnLogout);
+
+        btnDashboard.setOnClickListener(this);
+        btnUsers.setOnClickListener(this);
+        btnLogOut.setOnClickListener(this);
     }
 
     void initDatabase() {
@@ -127,5 +139,27 @@ public class AdminBookListActivity extends AppCompatActivity {
                 LoadList(searchValue);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.btnDashboard){
+            intent = new Intent(AdminBookListActivity.this, AdminDashboardActivity.class);
+            startActivity(intent);
+        }else if(v.getId() == R.id.btnUsers){
+            intent = new Intent(AdminBookListActivity.this, AdminUserListActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.btnLogout) {
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Log Out")
+                    .setMessage("Are you sure you want to log out?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        intent = new Intent(AdminBookListActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        }
     }
 }

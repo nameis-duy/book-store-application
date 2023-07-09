@@ -1,35 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.admin.AdminBookListActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activity.admin.AdminBookListActivity">
 
-    <EditText
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/activity_adminbooklist_et_search"
+                android:layout_width="367dp"
+                android:layout_height="48dp"
+                android:background="@drawable/custom_layout_border"
+                android:drawableStart="@drawable/baseline_search_24"
+                android:drawablePadding="10dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:hint="Search books" />
+
+            <Button
+                android:id="@+id/btnCreate"
+                android:layout_width="112dp"
+                android:layout_height="38dp"
+                android:text="Create"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activity_adminbooklist_rv_bookList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"/>
+
+
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/activity_adminbooklist_et_search"
-        android:hint="Search books"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/custom_layout_border"
-        android:drawableStart="@drawable/baseline_search_24"
-        android:drawablePadding="10dp"
-        />
+        android:background="@color/blue"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="4">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnCreate"
-        android:text="Create"/>
+        <ImageButton
+            android:id="@+id/btnDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/baseline_home_24" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/activity_adminbooklist_rv_bookList"
-        android:layout_marginTop="10dp"/>
+        <ImageButton
+            android:id="@+id/btnProducts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@color/blueSelected"
+            android:scaleType="centerInside"
+            android:src="@drawable/product_ic" />
 
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/btnUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/user_ic" />
+
+        <ImageButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logout_ic" />
+
+    </LinearLayout>
+
+</RelativeLayout>
