@@ -1,58 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".activity.admin.AdminUserListActivity">
+    android:layout_height="match_parent">
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/user_table">
         <TableRow>
-            <TextView android:text="Id"
-                android:textColor="@color/black"
-                android:textStyle="bold"
+            <TextView
+                android:layout_weight="0.5"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:layout_weight="0.5" />
-            <TextView android:text="Name"
+                android:text="Id"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_weight="2"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:layout_weight="2" />
-            <TextView android:text="Phone"
+                android:text="Name"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_weight="2"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:layout_weight="2" />
-            <TextView android:text="Password"
+                android:text="Phone"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_weight="2"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:layout_weight="2" />
-            <TextView android:text="Role"
+                android:text="Password"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:layout_weight="1" />
+                android:text="Role"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
         </TableRow>
     </TableLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_adminuserlist_rv_userList"
+        android:layout_below="@+id/user_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/activity_adminuserlist_rv_userList"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <ImageButton
+            android:id="@+id/btnDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/baseline_home_24" />
+
+        <ImageButton
+            android:id="@+id/btnProducts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/product_ic" />
+
+        <ImageButton
+            android:id="@+id/btnUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@color/blueSelected"
+            android:scaleType="centerInside"
+            android:src="@drawable/user_ic" />
+
+        <ImageButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logout_ic" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
